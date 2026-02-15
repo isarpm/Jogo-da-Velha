@@ -42,14 +42,15 @@ public class JogoDaVelha implements ActionListener {
             botoes[i].setBackground(new Color(75,0,130));
             botoes[i].setFocusable(false);
             botoes[i].addActionListener(this);
+            botoes[i].setEnabled(false);
         }
 
 
         botao_painel.setLayout(new GridLayout(3,3));
         botao_painel.setBackground(new Color(150,150,150));
         janela.add(botao_painel);
-
         primeiroTurno();
+
     }
 
 
@@ -64,6 +65,9 @@ public class JogoDaVelha implements ActionListener {
                         turno_do_jogador1 = false;
                         texto.setText("Turno: O");
                         checkVitoria();
+                        if(!(checkVitoria())) {
+                            checkEmpate();
+                        }
                     }
                 } else {
                     if(botoes[i].getText()=="") {
@@ -72,6 +76,9 @@ public class JogoDaVelha implements ActionListener {
                         turno_do_jogador1 = true;
                         texto.setText("Turno: X");
                         checkVitoria();
+                        if(!(checkVitoria())) {
+                            checkEmpate();
+                        }
                     }
                 }
             }
@@ -97,59 +104,101 @@ public class JogoDaVelha implements ActionListener {
             turno_do_jogador1 = false;
             texto.setText("Turno: O");
         }
+        for(int i = 0; i < 9; i++) {
+            botoes[i].setEnabled(true);
+        }
     }
 
-    public void checkVitoria() {
+    public void checkEmpate() {
+        //verifica se o jogo terminou
+        for (int i = 0; i < 9; i++) {
+            if (botoes[i].getText() == "") {
+                return;
+            }
+        }
+        // limpa e reseta
+        for (int j = 0; j < 9; j++) {
+            botoes[j].setText("");
+            texto.setText("Empate!");
+        }
+    }
+
+
+    public boolean checkVitoria() {
         // X linhas
         if((botoes[0].getText()=="X") && (botoes[1].getText()=="X") && botoes[2].getText()=="X") {
             VitoriaDoX(0,1,2);
+            return true;
         }
         if((botoes[3].getText()=="X") && (botoes[4].getText()=="X") && botoes[5].getText()=="X") {
             VitoriaDoX(3,4,5);
+            return true;
         }
         if((botoes[6].getText()=="X") && (botoes[7].getText()=="X") && botoes[8].getText()=="X") {
             VitoriaDoX(6,7,8);
+            return true;
         }
         // X diagonal
         if((botoes[0].getText()=="X") && (botoes[4].getText()=="X") && botoes[8].getText()=="X") {
             VitoriaDoX(0,4,8);
+            return true;
+        }
+        if((botoes[2].getText()=="X") && (botoes[4].getText()=="X") && botoes[6].getText()=="X") {
+            VitoriaDoX(2,4,6);
+            return true;
         }
         // X coluna
         if((botoes[0].getText()=="X") && (botoes[3].getText()=="X") && botoes[6].getText()=="X") {
             VitoriaDoX(0,3,6);
+            return true;
         }
         if((botoes[1].getText()=="X") && (botoes[4].getText()=="X") && botoes[7].getText()=="X") {
             VitoriaDoX(1,4,7);
+            return true;
         }
         if((botoes[2].getText()=="X") && (botoes[5].getText()=="X") && botoes[8].getText()=="X") {
             VitoriaDoX(2,5,8);
+            return true;
         }
 
 
         // O linhas
         if((botoes[0].getText()=="O") && (botoes[1].getText()=="O") && botoes[2].getText()=="O") {
             VitoriaDoO(0,1,2);
+            return true;
         }
         if((botoes[3].getText()=="O") && (botoes[4].getText()=="O") && botoes[5].getText()=="O") {
             VitoriaDoO(3,4,5);
+            return true;
         }
         if((botoes[6].getText()=="O") && (botoes[7].getText()=="O") && botoes[8].getText()=="O") {
             VitoriaDoO(6,7,8);
+            return true;
         }
         // O diagonal
         if((botoes[0].getText()=="O") && (botoes[4].getText()=="O") && botoes[8].getText()=="O") {
             VitoriaDoO(0,4,8);
+            return true;
+        }
+        if((botoes[2].getText()=="O") && (botoes[4].getText()=="O") && botoes[6].getText()=="O") {
+            VitoriaDoO(2,4,6);
+            return true;
         }
         // O coluna
         if((botoes[0].getText()=="O") && (botoes[3].getText()=="O") && botoes[6].getText()=="O") {
             VitoriaDoO(0,3,6);
+            return true;
         }
         if((botoes[1].getText()=="O") && (botoes[4].getText()=="O") && botoes[7].getText()=="O") {
             VitoriaDoO(1,4,7);
+            return true;
         }
         if((botoes[2].getText()=="O") && (botoes[5].getText()=="O") && botoes[8].getText()=="O") {
             VitoriaDoO(2,5,8);
+            return true;
         }
+
+        return false;
     }
 
     public void VitoriaDoX(int posicaoA, int posicaoB, int posicaoC) {
