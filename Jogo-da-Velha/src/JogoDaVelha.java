@@ -5,77 +5,39 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+
 public class JogoDaVelha implements ActionListener {
    Random gerador = new Random();
-   JFrame janela = new JFrame();
-   JPanel titulo_painel = new JPanel();
-   JPanel botao_painel = new JPanel();
-   JLabel texto = new JLabel();
-   JButton[] botoes = new JButton[9];
    boolean turno_do_jogador1;
+   Tabuleiro tabuleiro = new Tabuleiro(this);
 
 
     JogoDaVelha() {
-        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        janela.setSize(400,400);
-        janela.getContentPane().setBackground(new Color(75,0,130));
-        janela.setLayout(new BorderLayout());
-        janela.setVisible(true);
-
-        texto.setBackground(Color.BLACK);
-        texto.setForeground(Color.WHITE);
-        texto.setFont(new Font("PxPlus IBM VGA",Font.BOLD,30));
-        texto.setHorizontalAlignment(JLabel.CENTER);
-        texto.setText("Jogo da Velha");
-        texto.setOpaque(true);
-
-        titulo_painel.setLayout(new BorderLayout());
-        titulo_painel.setBounds(0,0,300,50);
-
-
-        titulo_painel.add(texto);
-        janela.add(titulo_painel,BorderLayout.NORTH);
-
-        for(int i = 0; i < 9; i++) {
-            botoes[i] = new JButton();
-            botao_painel.add(botoes[i]);
-            botoes[i].setFont(new Font("Dina", Font.BOLD,120));
-            botoes[i].setBackground(new Color(75,0,130));
-            botoes[i].setFocusable(false);
-            botoes[i].addActionListener(this);
-            botoes[i].setEnabled(false);
-        }
-
-
-        botao_painel.setLayout(new GridLayout(3,3));
-        botao_painel.setBackground(new Color(150,150,150));
-        janela.add(botao_painel);
         primeiroTurno();
-
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
         for(int i =0; i < 9; i++) {
-            if(e.getSource()==botoes[i]) {
+            if(e.getSource()==tabuleiro.getBotao(i)) {
                 if(turno_do_jogador1 == true) {
-                    if(botoes[i].getText()=="") {
-                        botoes[i].setForeground(Color.BLUE);
-                        botoes[i].setText("X");
+                    if(tabuleiro.getTexTBotao(i).isEmpty()) {
+                        tabuleiro.getBotao(i).setForeground(Color.BLUE);
+                        tabuleiro.getBotao(i).setText("X");
                         turno_do_jogador1 = false;
-                        texto.setText("Turno: O");
+                        tabuleiro.setTexto("Turno: O");
                         checkVitoria();
                         if(!(checkVitoria())) {
                             checkEmpate();
                         }
                     }
                 } else {
-                    if(botoes[i].getText()=="") {
-                        botoes[i].setForeground(Color.RED);
-                        botoes[i].setText("O");
+                    if(tabuleiro.getTexTBotao(i).isEmpty()) {
+                        tabuleiro.getBotao(i).setForeground(Color.RED);
+                        tabuleiro.getBotao(i).setText("O");
                         turno_do_jogador1 = true;
-                        texto.setText("Turno: X");
+                        tabuleiro.setTexto("Turno: X");
                         checkVitoria();
                         if(!(checkVitoria())) {
                             checkEmpate();
@@ -94,140 +56,93 @@ public class JogoDaVelha implements ActionListener {
             throw new RuntimeException(e);
         }
 
-        texto.setFont(new Font("PxPlus IBM VGA",Font.BOLD,60));
+        tabuleiro.textoAumentarFonte();
 
         int turno = gerador.nextInt(2);
 
         if(turno == 1) {
             turno_do_jogador1 = true;
-            texto.setText("Turno: X");
+            tabuleiro.setTexto("Turno: X");
         } else {
             turno_do_jogador1 = false;
-            texto.setText("Turno: O");
+            tabuleiro.setTexto("Turno: O");
         }
         for(int i = 0; i < 9; i++) {
-            botoes[i].setEnabled(true);
+            tabuleiro.getBotao(i).setEnabled(true);
         }
     }
 
     public void checkEmpate() {
         //verifica se o jogo terminou
         for (int i = 0; i < 9; i++) {
-            if (botoes[i].getText() == "") {
+            if (tabuleiro.getBotao(i).getText().equals("")) {
                 return;
             }
         }
         // limpa e reseta
         for (int j = 0; j < 9; j++) {
-            botoes[j].setText("");
-            texto.setText("Empate!");
+            tabuleiro.getBotao(j).setText("");
+            tabuleiro.setTexto("Empate!");
         }
     }
 
 
     public boolean checkVitoria() {
-        // X linhas
-        if((botoes[0].getText()=="X") && (botoes[1].getText()=="X") && botoes[2].getText()=="X") {
-            VitoriaDoX(0,1,2);
-            return true;
-        }
-        if((botoes[3].getText()=="X") && (botoes[4].getText()=="X") && botoes[5].getText()=="X") {
-            VitoriaDoX(3,4,5);
-            return true;
-        }
-        if((botoes[6].getText()=="X") && (botoes[7].getText()=="X") && botoes[8].getText()=="X") {
-            VitoriaDoX(6,7,8);
-            return true;
-        }
-        // X diagonal
-        if((botoes[0].getText()=="X") && (botoes[4].getText()=="X") && botoes[8].getText()=="X") {
-            VitoriaDoX(0,4,8);
-            return true;
-        }
-        if((botoes[2].getText()=="X") && (botoes[4].getText()=="X") && botoes[6].getText()=="X") {
-            VitoriaDoX(2,4,6);
-            return true;
-        }
-        // X coluna
-        if((botoes[0].getText()=="X") && (botoes[3].getText()=="X") && botoes[6].getText()=="X") {
-            VitoriaDoX(0,3,6);
-            return true;
-        }
-        if((botoes[1].getText()=="X") && (botoes[4].getText()=="X") && botoes[7].getText()=="X") {
-            VitoriaDoX(1,4,7);
-            return true;
-        }
-        if((botoes[2].getText()=="X") && (botoes[5].getText()=="X") && botoes[8].getText()=="X") {
-            VitoriaDoX(2,5,8);
-            return true;
-        }
+        int[][] possibilidade_de_vitorias = {
+                // linhas
+                {0,1,2}, {3,4,5}, {6,7,8},
+                // colunas
+                {0,3,6}, {1,4,7}, {2,5,8},
+                // diagonais
+                {0,4,8}, {2,4,6}
+        };
 
+        for (int i = 0; i < possibilidade_de_vitorias.length; i++) {
+            int a = possibilidade_de_vitorias[i][0];
+            int b = possibilidade_de_vitorias[i][1];
+            int c = possibilidade_de_vitorias[i][2];
 
-        // O linhas
-        if((botoes[0].getText()=="O") && (botoes[1].getText()=="O") && botoes[2].getText()=="O") {
-            VitoriaDoO(0,1,2);
-            return true;
-        }
-        if((botoes[3].getText()=="O") && (botoes[4].getText()=="O") && botoes[5].getText()=="O") {
-            VitoriaDoO(3,4,5);
-            return true;
-        }
-        if((botoes[6].getText()=="O") && (botoes[7].getText()=="O") && botoes[8].getText()=="O") {
-            VitoriaDoO(6,7,8);
-            return true;
-        }
-        // O diagonal
-        if((botoes[0].getText()=="O") && (botoes[4].getText()=="O") && botoes[8].getText()=="O") {
-            VitoriaDoO(0,4,8);
-            return true;
-        }
-        if((botoes[2].getText()=="O") && (botoes[4].getText()=="O") && botoes[6].getText()=="O") {
-            VitoriaDoO(2,4,6);
-            return true;
-        }
-        // O coluna
-        if((botoes[0].getText()=="O") && (botoes[3].getText()=="O") && botoes[6].getText()=="O") {
-            VitoriaDoO(0,3,6);
-            return true;
-        }
-        if((botoes[1].getText()=="O") && (botoes[4].getText()=="O") && botoes[7].getText()=="O") {
-            VitoriaDoO(1,4,7);
-            return true;
-        }
-        if((botoes[2].getText()=="O") && (botoes[5].getText()=="O") && botoes[8].getText()=="O") {
-            VitoriaDoO(2,5,8);
-            return true;
+            String textoA = tabuleiro.getTexTBotao(a);
+            String textoB = tabuleiro.getTexTBotao(b);
+            String textoC = tabuleiro.getTexTBotao(c);
+
+            if (!textoA.isEmpty() && textoA.equals(textoB) && textoA.equals(textoC)) {
+                if (textoA.equals("X")) {
+                    VitoriaDoX(a, b, c);
+                } else {
+                    VitoriaDoO(a, b, c);
+                }
+                return true;
+            }
         }
 
         return false;
     }
 
     public void VitoriaDoX(int posicaoA, int posicaoB, int posicaoC) {
-        botoes[posicaoA].setBackground(Color.green);
-        botoes[posicaoB].setBackground(Color.green);
-        botoes[posicaoC].setBackground(Color.green);
+        tabuleiro.getBotao(posicaoA).setBackground(Color.green);
+        tabuleiro.getBotao(posicaoB).setBackground(Color.green);
+        tabuleiro.getBotao(posicaoC).setBackground(Color.green);
 
         for(int i = 0; i < 9; i++) {
-            botoes[i].setEnabled(false);
+           tabuleiro.getBotao(i).setEnabled(false);
         }
-        texto.setText("X Venceu");
-        reiniciar("X", "O", posicaoA, posicaoB, posicaoC);
+        tabuleiro.setTexto("X Venceu");
     }
 
     public void VitoriaDoO(int posicaoA, int posicaoB, int posicaoC) {
-        botoes[posicaoA].setBackground(Color.green);
-        botoes[posicaoB].setBackground(Color.green);
-        botoes[posicaoC].setBackground(Color.green);
+        tabuleiro.getBotao(posicaoA).setBackground(Color.green);
+        tabuleiro.getBotao(posicaoB).setBackground(Color.green);
+        tabuleiro.getBotao(posicaoC).setBackground(Color.green);
 
         for(int i = 0; i < 9; i++) {
-            botoes[i].setEnabled(false);
+            tabuleiro.getBotao(i).setEnabled(false);
         }
-        texto.setText("O Venceu");
-        reiniciar("0","X",posicaoA, posicaoB, posicaoC);
+        tabuleiro.setTexto("O Venceu");
     }
 
     
-    public void reiniciar(String vencedor, String perdedor, int posicaoA, int posicaoB, int posicaoC) {
+    public void reiniciar(String vencedor) {
         int respota = JOptionPane.showOptionDialog(
                 null,
                 "Vitoria do " + vencedor + ", deseja reiniciar o jogo?",
@@ -239,14 +154,12 @@ public class JogoDaVelha implements ActionListener {
                 JOptionPane.YES_OPTION
         );
         if(respota == JOptionPane.YES_OPTION) {
-            for(int i = 0; i < 9; i++) {
-                botoes[i].setEnabled(true);
-                botoes[i].setText("");
+            for (int i = 0; i < 9; i++) {
+                tabuleiro.getBotao(i).setEnabled(true);
+                tabuleiro.getBotao(i).setText("");
+                tabuleiro.getBotao(i).setBackground(new Color(75,0,130));
             }
-            botoes[posicaoA].setBackground(new Color(75,0,130));
-            botoes[posicaoB].setBackground(new Color(75,0,130));
-            botoes[posicaoC].setBackground(new Color(75,0,130));
-            texto.setText("Turno :" + perdedor);
+            primeiroTurno();
 
         }
 
