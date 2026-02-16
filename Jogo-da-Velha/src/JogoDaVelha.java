@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.JOptionPane;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -210,6 +211,7 @@ public class JogoDaVelha implements ActionListener {
             botoes[i].setEnabled(false);
         }
         texto.setText("X Venceu");
+        reiniciar("X", "O", posicaoA, posicaoB, posicaoC);
     }
 
     public void VitoriaDoO(int posicaoA, int posicaoB, int posicaoC) {
@@ -221,8 +223,34 @@ public class JogoDaVelha implements ActionListener {
             botoes[i].setEnabled(false);
         }
         texto.setText("O Venceu");
+        reiniciar("0","X",posicaoA, posicaoB, posicaoC);
     }
 
+    
+    public void reiniciar(String vencedor, String perdedor, int posicaoA, int posicaoB, int posicaoC) {
+        int respota = JOptionPane.showOptionDialog(
+                null,
+                "Vitoria do " + vencedor + ", deseja reiniciar o jogo?",
+                "Fim de jogo",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                JOptionPane.YES_OPTION
+        );
+        if(respota == JOptionPane.YES_OPTION) {
+            for(int i = 0; i < 9; i++) {
+                botoes[i].setEnabled(true);
+                botoes[i].setText("");
+            }
+            botoes[posicaoA].setBackground(new Color(75,0,130));
+            botoes[posicaoB].setBackground(new Color(75,0,130));
+            botoes[posicaoC].setBackground(new Color(75,0,130));
+            texto.setText("Turno :" + perdedor);
+
+        }
+
+    }
 
 
 
