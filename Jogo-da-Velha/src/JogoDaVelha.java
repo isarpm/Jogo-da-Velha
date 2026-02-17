@@ -128,6 +128,7 @@ public class JogoDaVelha implements ActionListener {
            tabuleiro.getBotao(i).setEnabled(false);
         }
         tabuleiro.setTexto("X Venceu");
+        reiniciar("X", "O", posicaoA, posicaoB, posicaoC);
     }
 
     public void VitoriaDoO(int posicaoA, int posicaoB, int posicaoC) {
@@ -139,10 +140,11 @@ public class JogoDaVelha implements ActionListener {
             tabuleiro.getBotao(i).setEnabled(false);
         }
         tabuleiro.setTexto("O Venceu");
+        reiniciar("O", "X", posicaoA, posicaoB, posicaoC);
     }
 
     
-    public void reiniciar(String vencedor) {
+    public void reiniciar(String vencedor, String perdedor, int posicaoA, int posicaoB, int posicaoC) {
         int respota = JOptionPane.showOptionDialog(
                 null,
                 "Vitoria do " + vencedor + ", deseja reiniciar o jogo?",
@@ -159,6 +161,10 @@ public class JogoDaVelha implements ActionListener {
                 tabuleiro.getBotao(i).setText("");
                 tabuleiro.getBotao(i).setBackground(new Color(75,0,130));
             }
+            tabuleiro.getBotao(posicaoA).setBackground(new Color(75,0,130));
+            tabuleiro.getBotao(posicaoA).setBackground(new Color(75,0,130));
+            tabuleiro.getBotao(posicaoA).setBackground(new Color(75,0,130));
+            tabuleiro.setTexto("Turno :" + perdedor);
             primeiroTurno();
 
         }
